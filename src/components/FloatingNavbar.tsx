@@ -1,45 +1,57 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Home, Info, Users } from 'lucide-react'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Home, Info, Users } from "lucide-react";
 
 export default function FloatingNavbar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl">
-      <div className="max-w-md mx-auto px-4 py-2">
-        <ul className="flex justify-around">
+    <div className="fixed bottom-4 left-0 right-0 flex justify-center z-50">
+      <nav className="bg-white/80 backdrop-blur-md shadow-lg rounded-full px-6 py-3 mx-4">
+        <ul className="flex items-center space-x-8">
           <li>
-            <Link 
-              href="/" 
-              className={`flex flex-col items-center p-2 ${pathname === '/' ? 'text-primary' : 'text-gray-500'}`}
+            <Link
+              href="/"
+              className={`flex flex-col items-center p-2 transition-colors ${
+                pathname === "/"
+                  ? "text-primary"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              <Home className="h-6 w-6" />
+              <Home className="h-5 w-5" />
               <span className="text-xs mt-1">Home</span>
             </Link>
           </li>
           <li>
-            <Link 
-              href="/how-it-works" 
-              className={`flex flex-col items-center p-2 ${pathname === '/how-it-works' ? 'text-primary' : 'text-gray-500'}`}
+            <Link
+              href="/how-it-works"
+              className={`flex flex-col items-center p-2 transition-colors ${
+                pathname === "/how-it-works"
+                  ? "text-primary"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              <Info className="h-6 w-6" />
+              <Info className="h-5 w-5" />
               <span className="text-xs mt-1">How It Works</span>
             </Link>
           </li>
           <li>
-            <Link 
-              href="/credits" 
-              className={`flex flex-col items-center p-2 ${pathname === '/credits' ? 'text-primary' : 'text-gray-500'}`}
+            <Link
+              href="/credits"
+              className={`flex flex-col items-center p-2 transition-colors ${
+                pathname === "/credits"
+                  ? "text-primary"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
             >
-              <Users className="h-6 w-6" />
+              <Users className="h-5 w-5" />
               <span className="text-xs mt-1">Credits</span>
             </Link>
           </li>
         </ul>
-      </div>
-    </nav>
-  )
+      </nav>
+    </div>
+  );
 }
