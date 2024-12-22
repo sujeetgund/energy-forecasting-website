@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,32 +19,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import PredictionResult from "./PredictionResult";
 import { indian_states } from "@/lib/constants";
+import { Loader2 } from "lucide-react";
 
 type FormData = {
   state: string;
   date: string;
-  temperature: number;
-  humidity: number;
-  isHoliday: boolean;
 };
 
 export default function EnergyPredictionForm() {
   const [predictionResult, setPredictionResult] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    // In a real application, you would send this data to your API
-    // and receive the prediction result
-    console.log("Form data:", data);
+    setIsLoading(true);
+    setPredictionResult(null);
 
-    // Simulating API call with a timeout
-    setTimeout(() => {
-      // Mock prediction result
-      setPredictionResult(9500);
-    }, 1000);
+    try {
+      const response = await fetch("/api/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      setPredictionResult(result.toPrecision(5));
+    } catch (error) {
+      console.error("Error:", error);
+      // You might want to set an error state here and display it to the user
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -91,59 +103,21 @@ export default function EnergyPredictionForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="temperature"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Average Temperature (°C)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Predicting...
+            </>
+          ) : (
+            "Predict Energy Consumption"
           )}
-        />
-
-        <FormField
-          control={form.control}
-          name="humidity"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Humidity (%)</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isHoliday"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Holiday</FormLabel>
-                <FormDescription>Is it a holiday?</FormDescription>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full">
-          Predict Energy Consumption
         </Button>
       </form>
 
-      {predictionResult && <PredictionResult prediction={predictionResult} />}
+      {predictionResult !== null && (
+        <PredictionResult prediction={predictionResult} />
+      )}
     </Form>
   );
 }
