@@ -51,7 +51,7 @@ export default function PredictionResult({
           Predicted Energy Consumption: {prediction} GWh
         </div>
 
-        <div className="h-80 w-full">
+       {/* <div className="h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -67,7 +67,7 @@ export default function PredictionResult({
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </div> */}
 
         {/* <div className="mt-6">
           <h3 className="text-lg font-semibold mb-2">
