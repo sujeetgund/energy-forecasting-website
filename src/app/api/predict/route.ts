@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   console.log(data);
 
   try {
-    const response = await fetch("http://3.87.129.124:8000/predict", {
+    const response = await fetch("http://54.227.104.7:8000/predict", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
